@@ -8,7 +8,7 @@ from settings import Settings
 from game_stats import GameStats
 from scoreboard import Scoreboard
 from button import Button
-from ship import Ship
+from snowman import Snowman
 from bullet import Bullet
 from alien import Alien
 
@@ -36,7 +36,7 @@ class GrinchInvasion:
         self.stats = GameStats(self)
         self.sb = Scoreboard(self)
 
-        self.ship = Ship(self)
+        self.snowman = Snowman(self)
         self.bullets = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
 
@@ -59,7 +59,7 @@ class GrinchInvasion:
             self._check_events()
             
             if self.game_active and not self.game_paused:
-                self.ship.update()
+                self.snowman.update()
                 self._update_bullets()
                 self._update_aliens()
             
@@ -134,9 +134,9 @@ class GrinchInvasion:
          self._check_fleet_edges()
          self.aliens.update()
 
-         # Look for alien-ship collisions.
-         if pygame.sprite.spritecollideany(self.ship, self.aliens):
-              self._ship_hit()
+         # Look for grinches-snowman collisions.
+         if pygame.sprite.spritecollideany(self.snowman, self.aliens):
+              self._snowman_hit()
 
         # Look for aliens hitting the bottom of the screen.
          self._check_aliens_bottom()
@@ -152,8 +152,8 @@ class GrinchInvasion:
          """Check if any aliens have reached the bottom of the screen."""
          for alien in self.aliens.sprites():
               if alien.rect.bottom >= self.settings.screen_height:
-                   # Treat this the same as if the ship got hit.
-                   self._ship_hit()
+                   # Treat this the same as if the snowman got hit.
+                   self._snowman_hit()
                    break
 
     def _change_fleet_direction(self):
@@ -190,23 +190,23 @@ class GrinchInvasion:
               self.stats.reset_stats()
               self.sb.prep_score()
               self.sb.prep_level()
-              self.sb.prep_ships()
+              self.sb.prep_snowmen()
               self.game_active = True
 
               # Get rid of any remainin bullets and aliens.
               self.bullets.empty()
               self.aliens.empty()
 
-              # Create a new fleet and center the ship.
+              # Create a new fleet and center the snowman.
               self._create_fleet()
-              self.ship.center_ship()
+              self.snowman.center_snowman()
                 
     def _check_keydown_events(self, event):
         """Respond to keypresses."""
         if event.key == pygame.K_RIGHT:
-            self.ship.moving_right = True
+            self.snowman.moving_right = True
         elif event.key == pygame.K_LEFT:
-            self.ship.moving_left = True
+            self.snowman.moving_left = True
         elif event.key == pygame.K_ESCAPE:
             sys.exit()
         elif event.key == pygame.K_SPACE:
@@ -225,9 +225,9 @@ class GrinchInvasion:
 
     def _check_keyup_events(self, event):
         if event.key == pygame.K_RIGHT:
-            self.ship.moving_right = False
+            self.snowman.moving_right = False
         elif event.key == pygame.K_LEFT:
-            self.ship.moving_left = False
+            self.snowman.moving_left = False
     
     def _fire_bullet(self):
         """Create a new bullet and add it to the bullets group."""
@@ -235,20 +235,20 @@ class GrinchInvasion:
             new_bullet = Bullet(self)
             self.bullets.add(new_bullet)
 
-    def _ship_hit(self):
-         """Respond to the ship being hit by an alien."""
-         if self.stats.ships_left > 0:
-            # Decrement ship_left.
-            self.stats.ships_left -= 1
-            self.sb.prep_ships()
+    def _snowman_hit(self):
+         """Respond to the snowman being hit by an alien."""
+         if self.stats.snowmen_left > 0:
+            # Decrement snowman_left.
+            self.stats.snowmen_left -= 1
+            self.sb.prep_snowmen()
 
             # Get rid of any remaining bullets and aliens.
             self.bullets.empty()
             self.aliens.empty()
 
-            # Create a new fleet and center the ship.
+            # Create a new fleet and center the snowman.
             self._create_fleet()
-            self.ship.center_ship()
+            self.snowman.center_snowman()
 
             # Pause.
             sleep(0.5)
@@ -262,7 +262,7 @@ class GrinchInvasion:
             self.screen.fill(self.settings.bg_color)
             for bullet in self.bullets.sprites():
                  bullet.draw_bullet()
-            self.ship.blitime()
+            self.snowman.blitime()
             self.aliens.draw(self.screen)
 
             # Draw the score information.
