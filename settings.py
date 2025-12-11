@@ -1,5 +1,5 @@
 class Settings:
-    """A class to store all settings for Alien Invasion"""
+    """A class to store all settings for Grinch Invasion"""
 
     def __init__(self):
         """Initialize the game's settings."""
@@ -9,8 +9,8 @@ class Settings:
         self.bg_color = (230, 230, 230)
         # Set the background color. 3 values between 0 and 255 in RGB space.
 
-        # Ship settings
-        self.ship_limit = 3
+        # Snowman settings
+        self.snowman_limit = 3
 
         # Bullet settings
         self.bullet_width = 5
@@ -27,12 +27,12 @@ class Settings:
         # How quickly the game speeds up
         self.speedup_scale = 1.4
 
-        # How quickly the alkien point values increase
+        # How quickly the grinches point values increase
         self.score_scale = 1.5
 
     def initialize_dynamic_settings(self):
         """Initialize settings that change throughout the game."""
-        self.ship_speed = 8
+        self.snowman_speed = 8
         self.bullet_speed = 10.0
         self.alien_speed = 1.2
 
@@ -41,7 +41,7 @@ class Settings:
 
     def increase_speed(self):
         """Increase speed settings."""
-        self.ship_speed *= self.speedup_scale
+        self.snowman_speed *= self.speedup_scale
         self.bullet_speed *= self.speedup_scale
         self.alien_speed *= self.speedup_scale
 

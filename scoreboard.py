@@ -1,7 +1,7 @@
 import pygame.font
 from pygame.sprite import Group
 
-from ship import Ship
+from snowman import Snowman
 
 class Scoreboard:
     """A class to report scoring information."""
@@ -22,7 +22,7 @@ class Scoreboard:
         self.prep_score()
         self.prep_high_score()
         self.prep_level()
-        self.prep_ships()
+        self.prep_snowmen()
 
     def prep_score(self):
         """Turn the score into a rendered image."""
@@ -61,21 +61,21 @@ class Scoreboard:
         self.level_rect.right = self.score_rect.right
         self.level_rect.top = self.score_rect.bottom + 10
 
-    def prep_ships(self):
-        """Show how many ships are left."""
-        self.ships = Group()
-        for ship_number in range(self.stats.ships_left):
-            ship = Ship(self.ai_game)
-            ship.rect.x = 10 + ship_number * ship.rect.width
-            ship.rect.y = 10
-            self.ships.add(ship)
+    def prep_snowmen(self):
+        """Show how many snowmen are left."""
+        self.snowmen = Group()
+        for snowman_number in range(self.stats.snowmen_left):
+            snowman = Snowman(self.ai_game)
+            snowman.rect.x = 10 + snowman_number * snowman.rect.width
+            snowman.rect.y = 10
+            self.snowmen.add(snowman)
 
     def show_score(self):
-        """Draw score, ships and level to the screen."""
+        """Draw score, snowmen and level to the screen."""
         self.screen.blit(self.score_image, self.score_rect)
         self.screen.blit(self.high_score_image, self.high_score_rect)
         self.screen.blit(self.level_image, self.level_rect)
-        self.ships.draw(self.screen)
+        self.snowmen.draw(self.screen)
 
     def check_high_score(self):
         """Check to see if there's a new high score."""
