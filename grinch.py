@@ -12,7 +12,7 @@ class Grinch(Sprite):
         self.settings = ai_game.settings
 
         # Load the grinch image and set its rect attribute.
-        self.image = pygame.image.load(resource_path('images/alien1.bmp'))
+        self.image = pygame.image.load(resource_path('images\grinch.bmp'))
         self.rect = self.image.get_rect()
 
         # Start each new grinch near the top left of the screen.
