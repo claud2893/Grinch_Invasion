@@ -10,7 +10,7 @@ from scoreboard import Scoreboard
 from button import Button
 from snowman import Snowman
 from bullet import Bullet
-from alien import Alien
+from grinch import Grinch
 
 class GrinchInvasion:
     """Overall class to manage game assets and behavior"""
@@ -38,7 +38,7 @@ class GrinchInvasion:
 
         self.snowman = Snowman(self)
         self.bullets = pygame.sprite.Group()
-        self.aliens = pygame.sprite.Group()
+        self.grinches = pygame.sprite.Group()
 
         self._create_fleet()
 
@@ -61,7 +61,7 @@ class GrinchInvasion:
             if self.game_active and not self.game_paused:
                 self.snowman.update()
                 self._update_bullets()
-                self._update_aliens()
+                self._update_grinches()
             
             self._update_screen()
             self.clock.tick(60)
@@ -70,30 +70,30 @@ class GrinchInvasion:
             Then we make the clock tick at the end of the while loop in run_game().
             The tick() method takes one argument: the frame rate for the game.
             """
-    def _create_alien(self, x_position, y_position):
-         """Create a new alien and place it in the row."""
-         new_alien = Alien(self)
-         new_alien.x = x_position
-         new_alien.rect.x = x_position
-         new_alien.rect.y = y_position
-         self.aliens.add(new_alien)
+    def _create_grinch(self, x_position, y_position):
+         """Create a new grinch and place it in the row."""
+         new_grinch = Grinch(self)
+         new_grinch.x = x_position
+         new_grinch.rect.x = x_position
+         new_grinch.rect.y = y_position
+         self.grinches.add(new_grinch)
 
     def _create_fleet(self):
-        """Create the fleet of aliens."""
-        # Create an alien and keep adding aliens until there's no room left.
-        # Spacing between aliens is one alien width.
-        alien = Alien(self)
-        alien_width, alien_height = alien.rect.size
+        """Create the fleet of grinches."""
+        # Create a grinch and keep adding grinches until there's no room left.
+        # Spacing between grinches is one grinch width.
+        grinch = Grinch(self)
+        grinch_width, grinch_height = grinch.rect.size
 
-        current_x, current_y = alien_width, alien_height
-        while current_y < (self.settings.screen_height - 9 * alien_height):
-            while current_x < (self.settings.screen_width - 2 * alien_width):
-                self._create_alien(current_x, current_y)
-                current_x += 2 * alien_width
+        current_x, current_y = grinch_width, grinch_height
+        while current_y < (self.settings.screen_height - 9 * grinch_height):
+            while current_x < (self.settings.screen_width - 2 * grinch_width):
+                self._create_grinch(current_x, current_y)
+                current_x += 2 * grinch_width
 
             # Finished a row; reset x value and increment y value.
-            current_x = alien_width
-            current_y += 2 * alien_height
+            current_x = grinch_width
+            current_y += 2 * grinch_height
     
     def _update_bullets(self):
         self.bullets.update()
@@ -104,22 +104,22 @@ class GrinchInvasion:
                 self.bullets.remove(bullet)
         # print(len(self.bullets))
 
-        self._check_bullet_alien_collisions()
+        self._check_bullet_grinch_collisions()
 
-    def _check_bullet_alien_collisions(self):
-        """Respond to bullet-alien collisions."""
-        # Check for any bullets that have hit aliens.
-        # If so, get rid of the bullets that have hit aliens.
+    def _check_bullet_grinch_collisions(self):
+        """Respond to bullet-grinch collisions."""
+        # Check for any bullets that have hit grinches.
+        # If so, get rid of the bullets that have hit grinches.
         collisions = pygame.sprite.groupcollide(
-             self.bullets, self.aliens, True, True)
+             self.bullets, self.grinches, True, True)
         
         if collisions:
-             for aliens in collisions.values():
-                self.stats.score += self.settings.alien_points * len(aliens)
+             for grinches in collisions.values():
+                self.stats.score += self.settings.grinch_points * len(grinches)
              self.sb.prep_score()
              self.sb.check_high_score()
 
-        if not self.aliens:
+        if not self.grinches:
              # Destroy existing bullets and create new fleet.
              self.bullets.empty()
              self._create_fleet()
@@ -129,37 +129,37 @@ class GrinchInvasion:
              self.stats.level += 1
              self.sb.prep_level()
     
-    def _update_aliens(self):
+    def _update_grinches(self):
          """Check if the fleet is at an edge, then update positions.."""
          self._check_fleet_edges()
-         self.aliens.update()
+         self.grinches.update()
 
          # Look for grinches-snowman collisions.
-         if pygame.sprite.spritecollideany(self.snowman, self.aliens):
+         if pygame.sprite.spritecollideany(self.snowman, self.grinches):
               self._snowman_hit()
 
-        # Look for aliens hitting the bottom of the screen.
-         self._check_aliens_bottom()
+        # Look for grinches hitting the bottom of the screen.
+         self._check_grinches_bottom()
 
     def _check_fleet_edges(self):
-         """Respond appropriately if any aliens have reached an edge."""
-         for alien in self.aliens.sprites():
-              if alien.check_edges():
+         """Respond appropriately if any grinches have reached an edge."""
+         for grinch in self.grinches.sprites():
+              if grinch.check_edges():
                    self._change_fleet_direction()
                    break
               
-    def _check_aliens_bottom(self):
-         """Check if any aliens have reached the bottom of the screen."""
-         for alien in self.aliens.sprites():
-              if alien.rect.bottom >= self.settings.screen_height:
+    def _check_grinches_bottom(self):
+         """Check if any grinches have reached the bottom of the screen."""
+         for grinch in self.grinches.sprites():
+              if grinch.rect.bottom >= self.settings.screen_height:
                    # Treat this the same as if the snowman got hit.
                    self._snowman_hit()
                    break
 
     def _change_fleet_direction(self):
          """Drop the entire and change the fleet's direction."""
-         for alien in self.aliens.sprites():
-              alien.rect.y += self.settings.fleet_drop_speed
+         for grinch in self.grinches.sprites():
+              grinch.rect.y += self.settings.fleet_drop_speed
          self.settings.fleet_direction *= -1
 
     def _check_events(self):
@@ -193,9 +193,9 @@ class GrinchInvasion:
               self.sb.prep_snowmen()
               self.game_active = True
 
-              # Get rid of any remainin bullets and aliens.
+              # Get rid of any remainin bullets and grinches.
               self.bullets.empty()
-              self.aliens.empty()
+              self.grinches.empty()
 
               # Create a new fleet and center the snowman.
               self._create_fleet()
@@ -236,15 +236,15 @@ class GrinchInvasion:
             self.bullets.add(new_bullet)
 
     def _snowman_hit(self):
-         """Respond to the snowman being hit by an alien."""
+         """Respond to the snowman being hit by a grinch."""
          if self.stats.snowmen_left > 0:
             # Decrement snowman_left.
             self.stats.snowmen_left -= 1
             self.sb.prep_snowmen()
 
-            # Get rid of any remaining bullets and aliens.
+            # Get rid of any remaining bullets and grinches.
             self.bullets.empty()
-            self.aliens.empty()
+            self.grinches.empty()
 
             # Create a new fleet and center the snowman.
             self._create_fleet()
@@ -263,7 +263,7 @@ class GrinchInvasion:
             for bullet in self.bullets.sprites():
                  bullet.draw_bullet()
             self.snowman.blitime()
-            self.aliens.draw(self.screen)
+            self.grinches.draw(self.screen)
 
             # Draw the score information.
             self.sb.show_score()
