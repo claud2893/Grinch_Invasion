@@ -13,7 +13,7 @@ class Snowman(Sprite):
         self.settings = ai_game.settings
 
         # Load the snowman image and get its rect.
-        self.image = pygame.image.load(resource_path('images/ship.bmp'))
+        self.image = pygame.image.load(resource_path('images\snowman.bmp'))
         self.rect = self.image.get_rect()
 
         # Start each new snowman at the bottom center of the screen.
