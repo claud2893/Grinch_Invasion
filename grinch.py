@@ -1,5 +1,4 @@
 import pygame
-import random
 from pygame.sprite import Sprite
 from utils import resource_path
 
