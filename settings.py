@@ -1,3 +1,6 @@
+import pygame
+from utils import resource_path
+
 class Settings:
     """A class to store all settings for Grinch Invasion"""
 
@@ -6,8 +9,11 @@ class Settings:
         # Screen settings
         self.screen_width = 1920
         self.screen_height = 1080
-        self.bg_color = (230, 230, 230)
+        self.bg_color = (170, 211, 233)
         # Set the background color. 3 values between 0 and 255 in RGB space.
+
+        # Load background image
+        self.bg_image = pygame.image.load(resource_path('images/background.jpg'))
 
         # Snowman settings
         self.snowman_limit = 3
