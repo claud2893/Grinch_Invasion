@@ -1,3 +1,5 @@
+![alt text](https://github.com/claud2893/Grinch_Invasion/blob/main/images/screenshot.jpg?raw=true)
+
 # Grinch Invasion
 
 ## A cozy Space Invaders-like pygame with a Christmas theme!
